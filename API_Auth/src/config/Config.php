@@ -4,6 +4,10 @@ namespace App\Config;
 
 use PDO;
 use PDOException;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(dirname(__DIR__, 2), '.env');
+$dotenv->load();
 
 class Config
 {
@@ -15,13 +19,10 @@ class Config
 
      public function __construct()
      {
-          $dotenv = \DotenvVault\DotenvVault::createImmutable(__DIR__);
-          $dotenv->safeLoad();
-
-          $this->host = "localhost:3306";
-          $this->user = "root";
-          $this->password = "satelkermel123";
-          $this->dbname = "blog_api";
+          $this->host = $_SERVER['DB_HOST'];
+          $this->user = $_SERVER['DB_USER'];
+          $this->password = $_SERVER['DB_PASSWORD'];
+          $this->dbname = $_SERVER['DB_NAME'];
 
           try {
                $this->pdo = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->user, $this->password);
