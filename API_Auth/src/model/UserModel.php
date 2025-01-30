@@ -9,7 +9,7 @@ class UserModel extends Config
 {
      private $table = 'users';
 
-     public function getUniqueUser(string $username): array
+     public function getUniqueUser(string $username)
      {
           $PDO = $this->getPdo();
           $sql = "SELECT * FROM {$this->table} WHERE username = :username";
