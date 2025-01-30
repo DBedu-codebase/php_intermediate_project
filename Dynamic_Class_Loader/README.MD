@@ -25,6 +25,9 @@ You are required to implement a dynamic class loader from class User.
 ```php
 namespace App\Controllers;
 ```
+```bash
+composer dump-autoload
+```
 ### Import vendor autoload and call namespace
 ```php
 require_once('./vendor/autoload.php');
