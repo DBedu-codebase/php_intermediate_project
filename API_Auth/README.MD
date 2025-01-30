@@ -49,10 +49,12 @@ This is will be generated JWT token
 ### Error-Handling and Form-validation
 Validating Users Input
 ```json 
-POST /api/v1/auth/login
+POST /api/v1/auth/register
 {
-    "username": "Jhon Doe",
-    "password": "JhonDoe1234"
+    "errors": {
+        "username": "string|required|min:3|max:50 is required",
+        "password": "password|required|min:8|max:255 is required"
+    }
 }
 ```
 This project will help you understand how to implement REST API with PHP using OOP and JWT. 
