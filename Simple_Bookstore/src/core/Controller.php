@@ -15,8 +15,9 @@ class Controller
             echo "View not found: " . htmlspecialchars($view);
         }
     }
-    public function redirect(string $path): void
+    public function redirect(string $path, $data = ""): void
     {
+        unset($data);
         header('Location: ' . $path);
         exit;
     }

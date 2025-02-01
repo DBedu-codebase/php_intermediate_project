@@ -2,7 +2,9 @@
 
 namespace App\Core;
 
-class App
+use App\Controllers;
+
+class App extends Controller
 {
      private array $routes = [];
 
@@ -52,9 +54,7 @@ class App
                }
           }
 
-          http_response_code(404);
-          echo json_encode(['error' => 'Route not found']);
-          exit;
+          $this->render('error', ['error' => 'Route not found']);
      }
 
      private function match(string $routePath, string $requestUri, array &$params): bool

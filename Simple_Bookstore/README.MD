@@ -1,60 +1,101 @@
-# API Auth
-In this project you are required to develop a REST API for user authentication and authorization using JWT. 
+# Simple Bookstore
+In this project you are required to develop a CRUD application using PDO and mySQL. 
 ## Goals
 The skills you will learn from this project include:
 
-- User authentication
 - Schema design and databse
 - Restful API design
-- JWT (JSON Web Token)
-- Create operations with PDO
+- CRUD operations with PDO
 - Error handling
 - form validation
+- Frontend rendering
 
 ## Requirements
-You are required to Rest API for user authentication and authorization using JWT.
-- User registration to create a new user
-- Login endpoint to authenticate the user and generate a token
-- Implementation of Create operations with PDO
+You are required to implement the following features.
+- CRUD Book store operations
+- Implementation of CRUD operations with PDO
+- Implementation counting length of book
 - Implementation of error handling and form validation
-- Use a database to store the users data (for begginer choose MySQL)
-### User Registration
-Register a new user account
+- Use a database to store the Book Store data (for begginer choose MySQL)
+- Implementation of Frontend rendering with PHP
+### CRUD Book store operations
+Get the book store data
 ```json 
-POST /api/v1/auth/register
+GET /api/v1/book
+[{
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
+}]
+```
+![Get All](./src/public/assets/book_store_get_all.png)
+Get the book store by ID
+```json 
+GET /api/v1/book/1
+[{
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
+}]
+```
+![Get All](./src/public/assets/book_store_by-id.png)
+Post the book store data
+```json 
+POST /api/v1/book
 {
-    "username": "Jhon Doe",
-    "password": "JhonDoe1234"
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
 }
 ```
-### User Login
-Authentication users login
+![Create](./src/public/assets/book_store_create.png)
+Delete the book store data by ID
 ```json 
-POST /api/v1/auth/login
+POST /api/v1/book/delete/1
 {
-    "username": "Jhon Doe",
-    "password": "JhonDoe1234"
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
 }
 ```
-This is will be generated JWT token 
+![Delete By Id](./src/public/assets/book_store_delete_by_id.png)
+Delete the all book store data
 ```json 
+POST /api/v1/book/delete
 {
-    "message": "Login successfully",
-    "data": {
-        "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJqb2tvLXBvc3RtYW4iLCJleHAiOjE3MzgyMjk2MDB9.JCdVSt3A-X5aONTkHGFWwM5PWzDPkIXTAh0kzBMmjZc",
-        "expiry": "2025-01-30T09:33:20+00:00"
-    }
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
 }
 ```
+![Delete All](./src/public/assets/book_store_delete_all.png)
+Update the book store data base by ID
+```json 
+POST /api/v1/book/update/1
+{
+    "title": "Jhon Doe",
+    "author": "Jhon Doe",
+    "price": 100
+}
+```
+![Update](./src/public/assets/book_store_by-id.png)
 ### Error-Handling and Form-validation
 Validating Users Input
 ```json 
 POST /api/v1/auth/register
 {
     "errors": {
-        "username": "string|required|min:3|max:50 is required",
-        "password": "password|required|min:8|max:255 is required"
-    }
+        "title": "min:3 is required",
+        "author": "min:3 is required",
+        "price": "min:1 is required"
+    }   
+  }
 }
 ```
-This project will help you understand how to implement REST API with PHP using OOP and JWT. 
+![Form Validation](./src/public/assets/book_store_error_handling.png)
+### Bonus
+- Implementation sorting low or high price for the books
+- Implementation search for the title of books
+This project will help you understand how to implement REST API, CRUD operations and Frontend Rendering with PHP using OOP and PDO. 
+
+Note: In the HTML Form action, you can use the `action` attribute to specify the URL to which the form data will be sent and the type of request to be made must be `POST` or `GET`.

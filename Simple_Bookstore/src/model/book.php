@@ -18,8 +18,21 @@ class Book extends Config
 
           return $stmt->fetchAll(PDO::FETCH_ASSOC);
      }
+     public function searchAndFilter(array $data): array
+     {
+          $books = $this->getAll();
+          $search = strtolower($data["simple-search"]);
+          $price = $data["price"];
 
-     public function getById(int $id)
+          // Filter books based on search
+          if ($search) $books = array_filter($books, fn($book) => strpos(strtolower($book['title']), $search) !== false);
+          // Sort books based on price
+          usort($books, fn($a, $b) => ($price === 'high') ? $b['price'] <=> $a['price'] : $a['price'] <=> $b['price']);
+          return array_values($books); // Reset array keys
+     }
+
+     /******  4ddf9f61-0ecb-467e-8db9-dde7e5128d10  *******/
+     public function getById($id)
      {
           $PDO = $this->getPdo();
           $sql = "SELECT * FROM {$this->table} WHERE id = :id";
@@ -73,5 +86,12 @@ class Book extends Config
           $sql = "DELETE FROM {$this->table} WHERE id = :id";
           $stmt = $PDO->prepare($sql);
           $stmt->execute([':id' => $id]);
+     }
+     public function deleteAll(): void
+     {
+          $PDO = $this->getPdo();
+          $sql = "DELETE FROM {$this->table}";
+          $stmt = $PDO->prepare($sql);
+          $stmt->execute();
      }
 }

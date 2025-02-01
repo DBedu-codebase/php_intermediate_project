@@ -16,11 +16,13 @@ class Routes extends Config
           // ! GET
           $router->get('/api/v1/book', fn() => $Book->index());
           $router->get('/api/v1/book/:id', fn($id) => $Book->show($id));
+          $router->get('/api/v1/book/', fn() => $Book->searchAndFilterByType());
           // ! POST
           $router->post('/api/v1/book', fn() => $Book->create());
           // ! UPDATE
           $router->post('/api/v1/book/update/:id', fn($id) => $Book->update($id));
           // ! DELETE
+          $router->post('/api/v1/book/delete', fn() => $Book->deleteAll());
           $router->post('/api/v1/book/delete/:id', fn($id) => $Book->delete($id));
           $router->run();
      }
