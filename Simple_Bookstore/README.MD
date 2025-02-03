@@ -82,7 +82,7 @@ POST /api/v1/book/update/1
 ### Error-Handling and Form-validation
 Validating Users Input
 ```json 
-POST /api/v1/auth/register
+POST /api/v1/book
 {
     "errors": {
         "title": "min:3 is required",
