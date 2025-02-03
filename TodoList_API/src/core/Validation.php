@@ -19,7 +19,10 @@ class Validation
                $rules = explode('|', $rules);
 
                foreach ($rules as $rule) {
-                    if (!isset($input[$key]) || empty($input[$key])) {
+                    if (
+                         !isset($input[$key]) || $input[$key] === null ||
+                         $input[$key] === ''
+                    ) {
                          $errors[$key] = $rule . ' is required';
                     } else {
                          list($rule, $params) = $this->getRuleParams($rule);
@@ -35,13 +38,28 @@ class Validation
                                         $errors[$key] = 'Invalid ' . $rule;
                                    }
                                    break;
+                              case 'number':
+                                   if (!is_numeric($input[$key])) {
+                                        $errors[$key] = 'Input must be ' . $rule;
+                                   }
+                                   break;
+                              case 'minNumber':
+                                   if ((int)$input[$key] < (int)$params) {
+                                        $errors[$key] = ucfirst($key) . ' must be at least ' . $params;
+                                   }
+                                   break;
+                              case 'maxNumber':
+                                   if ((int)$input[$key] > (int)$params) {
+                                        $errors[$key] = ucfirst($key) . ' must not be greater than ' . $params;
+                                   }
+                                   break;
                               case 'min':
-                                   if (strlen($input[$key]) < $params) {
+                                   if (strlen($input[$key]) <= $params) {
                                         $errors[$key] = $rule . ' of ' . $params . ' characters is required';
                                    }
                                    break;
                               case 'max':
-                                   if (strlen($input[$key]) > $params) {
+                                   if (strlen($input[$key]) >= $params) {
                                         $errors[$key] = $rule . ' of ' . $params . ' characters is required';
                                    }
                                    break;

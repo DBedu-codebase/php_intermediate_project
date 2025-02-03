@@ -10,72 +10,21 @@ class TodoModel extends Config
 {
      private $table = 'tasks';
 
-     // public function getAll(array $paramsQuery = [], stdClass $payload = null): array
-     // {
-     //      $PDO = $this->getPdo();
-
-     //      $paramsQuery = array_merge([
-     //           'page' => $_GET['page'] ?? 1,
-     //           'limit' => $_GET['limit'] ?? 10,
-     //           'orderBy' => $_GET['orderBy'] ?? 'ASC',
-     //           'status' => $_GET['status'] ?? ''
-     //      ], $paramsQuery);
-
-     //      $offset = ($paramsQuery['page'] - 1) * $paramsQuery['limit'];
-
-     //      $sql = "SELECT * FROM {$this->table}";
-
-     //      if (!empty($paramsQuery['status'])) {
-     //           $sql .= " WHERE status = :status";
-     //      }
-
-     //      $sql .= " AND author_id = :author_id";
-
-     //      $sql .= " ORDER BY title {$paramsQuery['orderBy']} LIMIT {$paramsQuery['limit']} OFFSET {$offset}";
-
-     //      $stmt = $PDO->prepare($sql);
-
-     //      $stmt->execute(array_merge([
-     //           ':author_id' => $payload->id
-     //      ], !empty($paramsQuery['status']) ? [':status' => $paramsQuery['status']] : []));
-
-     //      return $stmt->fetchAll(PDO::FETCH_ASSOC);
-     // }
-     /******  4a8d04eb-06c8-4137-9663-5c62cf6b0731  *******/
-
-     public function getAll(array $paramsQuery = [], stdClass $payload = null): array
+     public function getAll(array $paramsQuery, stdClass $payload = null): array
      {
           $PDO = $this->getPdo();
-
-          // Merge query parameters with defaults
-          $paramsQuery = array_merge([
-               'page' => $_GET['page'] ?? 1,
-               'limit' => $_GET['limit'] ?? 10,
-               'orderBy' => $_GET['orderBy'] ?? 'ASC',
-               'status' => $_GET['status'] ?? ''
-          ], $paramsQuery);
-
-          $offset = ($paramsQuery['page'] - 1) * $paramsQuery['limit'];
-
-          // Start SQL Query
           $sql = "SELECT * FROM {$this->table} WHERE author_id = :author_id";
 
-          // Add status filter if provided
           $queryParams = [':author_id' => $payload->id];
-          if (!empty($paramsQuery['status'])) {
-               $sql .= " AND status = :status";
-               $queryParams[':status'] = $paramsQuery['status'];
+
+          if (isset($paramsQuery['status']) && $paramsQuery['status'] !== '') {
+               $sql .= ' AND COALESCE(status, 0) = :status';
+               $queryParams[':status'] = (int) $paramsQuery['status'];
           }
 
-          // Ordering and Pagination
-          $sql .= " ORDER BY title " . ($paramsQuery['orderBy'] === 'DESC' ? 'DESC' : 'ASC');
-          $sql .= " LIMIT :limit OFFSET :offset";
-
-          // Prepare and execute query
-          $stmt = $PDO->prepare($sql);
+          $stmt = $PDO->prepare("{$sql} ORDER BY task_id {$paramsQuery['orderBy']} LIMIT :limit OFFSET :offset");
           $stmt->bindValue(':limit', (int) $paramsQuery['limit'], PDO::PARAM_INT);
-          $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
-
+          $stmt->bindValue(':offset', (int) (($paramsQuery['page'] - 1) * $paramsQuery['limit']), PDO::PARAM_INT);
           foreach ($queryParams as $key => $value) {
                $stmt->bindValue($key, $value);
           }
@@ -117,18 +66,22 @@ class TodoModel extends Config
      public function update(int $id, array $data, stdClass $payload): array
      {
           $PDO = $this->getPdo();
-          $sql = "UPDATE {$this->table} SET title = :title, description = :description WHERE task_id = :id";
+          $sql = "UPDATE {$this->table} SET title = :title, description = :description,status = :status, updated_at = :updated_at WHERE task_id = :id";
           $stmt = $PDO->prepare($sql);
           $stmt->execute([
                ':id' => $id,
                ':title' => $data['title'],
                ':description' => $data['description'],
+               ':status' => $data['status'],
+               ':updated_at' => date('Y-m-d H:i:s')
           ]);
           return [
                'id' => $id,
                'title' => $data['title'],
                'description' => $data['description'],
+               'status' => $data['status'],
                'author_id' => $payload->id,
+               'updated_at' => date('Y-m-d H:i:s')
           ];
      }
 
