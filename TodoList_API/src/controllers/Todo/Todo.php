@@ -35,7 +35,9 @@ class Todo extends Validation
                     'message' => "Successfully Get All Todo",
                     'data' => [
                          'todo' => $result,
-                         'payload' => $this->auth->authenticate()
+                         'page' => $paramsQuery['page'],
+                         'limit' => $paramsQuery['limit'],
+                         'total' => count($result)
                     ]
                ]);
           } catch (PDOException $e) {
@@ -126,6 +128,7 @@ class Todo extends Validation
                $validationRules = [
                     'title' => 'required|string|min:3|max:50',
                     'description' => 'required|string|min:3|max:255',
+                    'status' => 'required|number|minNumber:0|maxNumber:1',
                ];
                foreach ($validationRules as $key => $rule) {
                     $this->addRule($key, $rule);
