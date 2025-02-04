@@ -103,7 +103,7 @@ class TodoModel extends Config
      public function delete(int $id): void
      {
           $PDO = $this->getPdo();
-          $sql = "DELETE FROM {$this->table} WHERE post_id = :id";
+          $sql = "DELETE FROM {$this->table} WHERE task_id = :id";
           $stmt = $PDO->prepare($sql);
           $stmt->execute([':id' => $id]);
      }
