@@ -1,9 +1,0 @@
-{
-    "name": "vendor/dynamic_class_loader",
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    }
-}

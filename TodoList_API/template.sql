@@ -16,10 +16,6 @@ CREATE TABLE tasks (
     author_id INT NOT NULL COMMENT 'Foreign Key to Users Table',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation Time',
     updated_at DATETIME COMMENT 'Updated Time',
+    status BOOLEAN DEFAULT FALSE COMMENT 'Tasks status',
     FOREIGN KEY (author_id) REFERENCES user(user_id) ON DELETE CASCADE
 ) COMMENT='Table to store tasks with reference to authors';
-
-/*************  ✨ Codeium Command 🌟  **************/
-ALTER table tasks MODIFY status BOOLEAN DEFAULT FALSE COMMENT 'Tasks status';
-ALTER table tasks ADD status BOOLEAN COMMENT 'Tasks status';
-/******  1e64f29a-73fd-4973-9ab0-c36ee36a5ce7  *******/

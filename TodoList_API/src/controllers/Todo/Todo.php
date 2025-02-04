@@ -50,21 +50,6 @@ class Todo extends Validation
      public function getTodoById($id)
      {
           try {
-               $result = $this->todoModel->getById($id);
-               if (empty($result)) {
-                    http_response_code(404);
-                    echo json_encode([
-                         'error' => 'Todo not found',
-                    ]);
-                    exit();
-               }
-
-               echo json_encode([
-                    'message' => "Successfully Get Blog Based Id",
-                    'data' => [
-                         'blog' => $result
-                    ]
-               ]);
           } catch (PDOException $e) {
                echo json_encode(['error' => 'Failed to get todo: ' . $e->getMessage()], JSON_PRETTY_PRINT);
           } catch (Exception $e) {
@@ -79,28 +64,8 @@ class Todo extends Validation
                $input = json_decode(file_get_contents('php://input'), true);
                header("Content-Type: application/json");
                // * validation simple input
-               $validationRules = [
-                    'title' => 'required|string|min:3|max:50',
-                    'description' => 'required|string|min:3|max:255',
-               ];
-               foreach ($validationRules as $key => $rule) {
-                    $this->addRule($key, $rule);
-               }
 
-               $errors = $this->validate($input);
-               if (!empty($errors)) {
-                    http_response_code(400);
-                    echo json_encode(['errors' => $errors]);
-                    exit();
-               }
-               // * create blog post
-               $result = $this->todoModel->create($input, $this->auth->authenticate());
-               echo json_encode([
-                    'message' => "Successfully Create Todo",
-                    'data' => [
-                         'todo' => $result
-                    ]
-               ]);
+               // * create todo post
           } catch (PDOException $e) {
                echo json_encode(['error' => 'Failed to get todo: ' . $e->getMessage()], JSON_PRETTY_PRINT);
           } catch (Exception $e) {
@@ -113,43 +78,15 @@ class Todo extends Validation
      {
           try {
                $this->auth->authenticate();
-               $Todo = $this->todoModel;
-               $getTodoId = $Todo->getById($id);
-               if (empty($getTodoId)) {
-                    http_response_code(404);
-                    echo json_encode([
-                         'error' => 'Todo not found',
-                    ]);
-                    exit();
-               }
+
                $input = json_decode(file_get_contents('php://input'), true);
                header("Content-Type: application/json");
                // * validation simple input
-               $validationRules = [
-                    'title' => 'required|string|min:3|max:50',
-                    'description' => 'required|string|min:3|max:255',
-                    'status' => 'required|number|minNumber:0|maxNumber:1',
-               ];
-               foreach ($validationRules as $key => $rule) {
-                    $this->addRule($key, $rule);
-               }
 
-               $errors = $this->validate($input);
-               if (!empty($errors)) {
-                    http_response_code(400);
-                    echo json_encode(['errors' => $errors]);
-                    exit();
-               }
                //  * validate author
-               $Todo->confirm_author($id, $this->auth->authenticate());
-               // * create blog post
-               $result = $Todo->update($id, $input, $this->auth->authenticate());
-               echo json_encode([
-                    'message' => "Successfully Update TodoList",
-                    'data' => [
-                         'todo' => $result
-                    ]
-               ]);
+
+               // * create todo post
+
           } catch (PDOException $e) {
                echo json_encode(['error' => 'Failed to get todo: ' . $e->getMessage()], JSON_PRETTY_PRINT);
           } catch (Exception $e) {
@@ -162,20 +99,8 @@ class Todo extends Validation
      {
           try {
                $this->auth->authenticate();
-               $Todo = $this->todoModel;
-               $result =  $Todo->getById($id);
-               if (empty($result)) {
-                    http_response_code(404);
-                    echo json_encode([
-                         'error' => 'Todo not found',
-                    ]);
-                    exit();
-               }
                //  * validate author
-               $Todo->confirm_author($id, $this->auth->authenticate());
                //* Delete blog post
-               $Todo->delete($id);
-               echo json_encode(['message' => 'Deleted successfully']);
           } catch (PDOException $e) {
                echo json_encode(['error' => 'Failed to delete todo: ' . $e->getMessage()], JSON_PRETTY_PRINT);
           } catch (Exception $e) {
